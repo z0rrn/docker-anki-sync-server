@@ -1,0 +1,14 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: contanki
+Upstream-Contact: Frederik Zorn <federdaemn@mail.de>
+Source: https://github.com/federdaemn/contanki
+
+# Sample paragraph, commented out:
+#
+# Files: src/*
+# Copyright: $YEAR $NAME <$CONTACT>
+# License: ...
+
+Files: .vscode/*
+Copyright: 2023 Frederik Zorn <federdaemn@mail.de>
+License: Apache-2.0
