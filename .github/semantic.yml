@@ -1,0 +1,14 @@
+# SPDX-FileCopyrightText: 2023 Frederik Zorn <federdaemn@mail.de>
+#
+# SPDX-License-Identifier: MIT
+
+# Enable checking of Commits
+enabled: true
+
+# Check Pull Request and Commit title
+titleAndCommits: true
+# Every Commit must fit
+anyCommit: true
+
+# Allow revert commits
+allowRevertCommits: true
