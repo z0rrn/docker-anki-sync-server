@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2023 Frederik Zorn <federdaemn@mail.de>
 #
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: Apache-2.0
 
 # Enable checking of Commits
 enabled: true
