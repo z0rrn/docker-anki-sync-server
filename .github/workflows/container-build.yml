@@ -17,10 +17,10 @@ jobs:
     steps:
 
     - name: Checkout the repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Login to GitHub Container Registry
-      uses: redhat-actions/podman-login@v2
+      uses: redhat-actions/podman-login@v1
       if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
       with:
         registry: ghcr.io
@@ -28,7 +28,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Login to DockerHub
-      uses: redhat-actions/podman-login@v2
+      uses: redhat-actions/podman-login@v1
       if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
       with:
         registry: docker.io
@@ -42,14 +42,13 @@ jobs:
         containerfiles: |
           ./containerfile
         tags: |
-          ghcr.io/federdaemn/contanki:latest
-          ghcr.io/federdaemn/contanki:${{ github.sha }}
-          docker.io/federdaemn/contanki:latest
-          docker.io/federdaemn/contanki:${{ github.sha }}
+          ghcr.io/federdaemn/oci-anki-sync:latest
+          ghcr.io/federdaemn/oci-anki-sync:${{ github.sha }}
+          docker.io/federdaemn/oci-anki-sync:latest
+          docker.io/federdaemn/oci-anki-sync:${{ github.sha }}
 
     - name: Push image
       uses: redhat-actions/push-to-registry@v2
       if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
       with:
         tags: ${{ steps.build_image.outputs.tags }}
-

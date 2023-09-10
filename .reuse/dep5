@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: contanki
+Upstream-Name: oci-anki-sync
 Upstream-Contact: Frederik Zorn <federdaemn@mail.de>
-Source: https://github.com/federdaemn/contanki
+Source: https://github.com/federdaemn/oci-anki-sync
 
 # Sample paragraph, commented out:
 #
