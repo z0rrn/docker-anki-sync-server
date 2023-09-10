@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 Frederik Zorn <federdaemn@mail.de>
+#
+# SPDX-License-Identifier: Apache-2.0
+
 name: 'Build and push anki-sync container'
 
 # run workflow on every branch, only upload on main (allow manual trigger)
@@ -35,17 +39,29 @@ jobs:
         username: federdaemn
         password: ${{ secrets.DOCKER_TOKEN }}
 
+    - name: Set outputs for later use
+      id: set-op
+      run: |
+        # extract version from ./containerfile
+        echo "::set-output name=anki-version::$(grep 'anki-version:' ./values.yml | cut -d' ' -f4)"
+        # get current date
+        echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
     - name: Build image
       id: build_image
       uses: redhat-actions/buildah-build@v2
       with:
         containerfiles: |
           ./containerfile
+        build-args: |
+          anki_version=${{ steps.set-op.outputs.anki-version  }}
         tags: |
           ghcr.io/federdaemn/oci-anki-sync:latest
-          ghcr.io/federdaemn/oci-anki-sync:${{ github.sha }}
+          ghcr.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.anki-version  }}
+          ghcr.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.date }}
           docker.io/federdaemn/oci-anki-sync:latest
-          docker.io/federdaemn/oci-anki-sync:${{ github.sha }}
+          docker.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.anki-version  }}
+          docker.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.date }}
 
     - name: Push image
       uses: redhat-actions/push-to-registry@v2
