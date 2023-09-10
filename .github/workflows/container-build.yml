@@ -43,9 +43,10 @@ jobs:
       id: set-op
       run: |
         # extract version from ./containerfile
-        echo "::set-output name=anki-version::$(grep 'anki-version:' ./values.yml | cut -d' ' -f4)"
+        echo "anki-version=$(grep 'anki-version:' ./values.yml | cut -d' ' -f4)" \
+          >> $GITHUB_OUTPUT
         # get current date
-        echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
     - name: Build image
       id: build_image
