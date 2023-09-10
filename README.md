@@ -9,10 +9,25 @@ SPDX-License-Identifier: Apache-2.0
 This contains a Dockerfile and Ci scripts to build a container image for
 [Anki](https://apps.ankiweb.net/) using Alpine Linux as base image.
 
-## Git hosting
+## Hosting
+
+### Git
 
 This project is hosted on [GitHub](https://github.com) at the
 [federdaemn/oci-anki-sync](https://github.com/federdaemn/oci-anki-sync) project.
+
+### Container Registry
+
+The container images are hosted on
+[GitHub Container Registry](https://github.com/federdaemn/oci-anki-sync/pkgs/container/oci-anki-sync)
+(recommended) and on
+[Docker Hub](https://hub.docker.com/r/federdaemn/oci-anki-sync) for redundancy.
+
+There are three tags availableon both registries:
+
+* `latest`: Always the latest version of anki.
+* `<anki-version>`: The version specified of anki.
+* `<date-of-build>`: The date when the container was built.
 
 ## Setup
 
@@ -21,8 +36,8 @@ This project is hosted on [GitHub](https://github.com) at the
 ## Contributing
 
 * Contributions for newer versions or files are gracefully accepted but the
-  is to only generate a Docker container.
-* Please wrap lines at 80 characters.
+  is to only generate a Docker/oci container.
+* Please try to wrap lines at 80 characters.
 
 ## License
 
