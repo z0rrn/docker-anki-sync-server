@@ -1,0 +1,64 @@
+# SPDX-FileCopyrightText: 2023 Frederik Zorn <federdaemn@mail.de>
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: 'Update anki version in values.yml'
+
+# run workflow every monday at 00:00 UTC
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+# allow workflow to write to repository
+permissions:
+  contents: write
+
+jobs:
+  update-version:
+    name: Update anki version in values.yml
+
+    # use ubuntu as runner
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    - name: Checkout the repository
+      uses: actions/checkout@v4
+    
+    - name: Setup yq
+      uses: mikefarah/yq@master
+
+    - name: Get current anki version
+      id: anki-version
+      run: |
+        echo "anki-version=$(yq '.version.anki-version' ./values.yml)" \
+          >> $GITHUB_OUTPUT
+
+    - name: Fetch GH API and get tag_name from latest release
+      id: get-release
+      run: |
+        # get latest release a. extract tag_name
+        tag_name=$(curl -L \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/repos/ankitects/anki/releases/latest |\
+          yq '.tag_name')
+            
+        # set output for later use
+        echo "name=$tag_name" >> $GITHUB_OUTPUT
+
+    - name: Set new anki version in values.yml
+      if: ${{ steps.anki-version.outputs.anki-version != steps.get-release.outputs.name }}
+      run: |
+        yq -i '.version.anki-version = "${{ steps.get-release.outputs.name }}"' \
+          ./values.yml
+
+    - name: Set up git email/name a. commit changes
+      if: ${{ steps.anki-version.outputs.anki-version != steps.get-release.outputs.name }}
+      run: |
+        git config user.name federdaemn-bot
+        git config user.email federdaemn@mail.de
+        git add ./values.yml
+        git commit -m "Bump anki version to ${{ steps.get-release.outputs.name }}"
+        git push origin main
