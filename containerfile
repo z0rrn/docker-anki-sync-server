@@ -5,6 +5,9 @@
 # use the official Rust image with debian base as builder
 FROM docker.io/library/rust:latest as builder
 
+# set anki version
+ARG anki_version
+
 # Set build directory (like cd)
 WORKDIR /build
 
@@ -16,7 +19,7 @@ RUN \
 
 RUN \
   cargo install --root /app \
-  --git https://github.com/ankitects/anki.git --tag 2.1.66 \
+  --git https://github.com/ankitects/anki.git --tag $anki_version \
   anki-sync-server
 
 # copy binary to debian-slim container to reduce container size
@@ -28,11 +31,12 @@ COPY --from=builder /app/bin/anki-sync-server /app/bin/anki-sync-server
 # create directory for anki config
 RUN mkdir -p /config
 
-# stores data in /config (VOLUME for persistence)
-ENV SYNC_BASE="/config"
-
-# set default port
-ENV SYNC_PORT="27701"
+ENV \
+  # stores data in /config (VOLUME for persistence)
+  SYNC_BASE="/config" \
+  
+  # set default port
+  SYNC_PORT="27701"
 
 # don't forget to set at least SYNC_USER1
 CMD [ "/app/bin/anki-sync-server" ]
