@@ -23,6 +23,9 @@ jobs:
     - name: Checkout the repository
       uses: actions/checkout@v4
 
+    - name: Setup yq
+      uses: mikefarah/yq@master
+
     - name: Login to GitHub Container Registry
       uses: redhat-actions/podman-login@v1
       if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
@@ -42,8 +45,8 @@ jobs:
     - name: Set outputs for later use
       id: set-op
       run: |
-        # extract version from ./containerfile
-        echo "anki-version=$(grep 'anki-version:' ./values.yml | cut -d' ' -f4)" \
+        # extract version from ./values.yml
+        echo "anki-version=$(yq '.version.anki-version' ./values.yml)" \
           >> $GITHUB_OUTPUT
         # get current date
         echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
