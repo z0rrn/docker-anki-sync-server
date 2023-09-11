@@ -9,6 +9,17 @@ SPDX-License-Identifier: Apache-2.0
 This contains a Dockerfile and Ci scripts to build a container image for
 [Anki](https://apps.ankiweb.net/) using Alpine Linux as base image.
 
+## Updates and Versions
+
+* The container is auto-updated every Monday whenever a new version of anki is
+  released. This is done by a GitHub Action and happens without any manual
+  intervention or review.
+* The actions are also auto-updated through dependabot.
+* The base image is always the latest version of Debian Linux.
+
+Result: The container is always up-to-date (atleast after every monday) and I
+can forget this project exists :).
+
 ## Hosting
 
 ### Git
