@@ -27,7 +27,8 @@ There are three tags availableon both registries:
 
 * `latest`: Always the latest version of anki.
 * `<anki-version>`: The version specified of anki.
-* `<date-of-build>`: The date when the container was built.
+* `<time-of-build>`: The exact time(+date) when the container was built
+  (following RFC 3339).
 
 ## Setup
 

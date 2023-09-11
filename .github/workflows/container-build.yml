@@ -48,24 +48,40 @@ jobs:
         # extract version from ./values.yml
         echo "anki-version=$(yq '.version.anki-version' ./values.yml)" \
           >> $GITHUB_OUTPUT
-        # get current date
-        echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+        # get current date+time
+        echo "time=$(date --utc +'%FT%TZ')" >> $GITHUB_OUTPUT
 
     - name: Build image
       id: build_image
       uses: redhat-actions/buildah-build@v2
       with:
+        # which containerfile to build from
         containerfiles: |
           ./containerfile
+        
+        # set labels to append to the image
+        labels: |
+          org.opencontainers.image.title=oci-anki-sync
+          org.opencontainers.image.authors="Frederik Zorn <federdaemn@mail.de>"
+          org.opencontainers.image.created="${{ steps.set-op.outputs.time }}"
+          org.opencontainers.image.version="${{ steps.set-op.outputs.anki-version }}"
+          org.opencontainers.image.licenses="AGPL-3.0-or-later"
+          org.opencontainers.image.url="https://github.com/federdaemn/oci-anki-sync"
+          org.opencontainers.image.source="https://github.com/federdaemn/oci-anki-sync"
+        
+        # build args to pass to the build
         build-args: |
           anki_version=${{ steps.set-op.outputs.anki-version  }}
+        
+        # tags to build the image with
         tags: |
           ghcr.io/federdaemn/oci-anki-sync:latest
           ghcr.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.anki-version  }}
-          ghcr.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.date }}
+          ghcr.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.time }}
           docker.io/federdaemn/oci-anki-sync:latest
           docker.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.anki-version  }}
-          docker.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.date }}
+          docker.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.time }}
 
     - name: Push image
       uses: redhat-actions/push-to-registry@v2
