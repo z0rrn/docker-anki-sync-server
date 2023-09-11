@@ -32,7 +32,7 @@ jobs:
         token: ${{ secrets.GH_ANKI_VERSION_TOKEN }}
     
     - name: Setup yq
-      uses: mikefarah/yq@master
+      uses: mikefarah/yq@v4
 
     - name: Get current anki version
       id: anki-version

@@ -1,0 +1,34 @@
+# SPDX-FileCopyrightText: 2023 Frederik Zorn <federdaemn@mail.de>
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+version: 2
+updates:
+
+    # see documentation for possible values
+  - package-ecosystem: "github-actions"
+    # location of package manifests (/ for github-actions)
+    directory: "/"
+    # when to check for updates
+    schedule:
+      interval: "weekly"
+    # prefix all commit messages with "chore(deps): "
+    commit-message:
+      prefix: "chore(deps): "
+
+    # Create a group of dependencies to be updated together in one pull request
+    groups:
+      # Update all dependencies from redhat-actions together
+      redhat-actions:
+        patterns:
+        - "redhat-actions/*"
+
+      # Update all non-specified dependencies together
+      all:
+        patterns:
+        - "*"
