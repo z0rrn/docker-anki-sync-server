@@ -32,10 +32,10 @@ COPY --from=builder /app/bin/anki-sync-server /app/bin/anki-sync-server
 RUN mkdir -p /config
 
 ENV \
-  # stores data in /config (VOLUME for persistence)
+# stores data in /config (VOLUME for persistence)
   SYNC_BASE="/config" \
   
-  # set default port
+# set default port
   SYNC_PORT="27701"
 
 # don't forget to set at least SYNC_USER1
