@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 # oci-anki-sync (anki-sync-server docker container) repository
 
 This contains a Dockerfile and Ci scripts to build a container image for
-[Anki](https://apps.ankiweb.net/) using Alpine Linux as base image.
+[Anki Sync Server](https://apps.ankiweb.net/) using Alpine Linux as base image.
 
 ## Updates and Versions
 
@@ -17,7 +17,7 @@ This contains a Dockerfile and Ci scripts to build a container image for
 * The actions are also auto-updated through dependabot.
 * The base image is always the latest version of Debian Linux.
 
-Result: The container is always up-to-date (atleast after every monday) and I
+Result: The container is always up-to-date (at least after every Monday) and I
 can forget this project exists :).
 
 ## Hosting
@@ -34,12 +34,12 @@ The container images are hosted on
 (recommended) and on
 [Docker Hub](https://hub.docker.com/r/federdaemn/oci-anki-sync) for redundancy.
 
-There are three tags availableon both registries:
+There are three tags available on both registries:
 
 * `latest`: Always the latest version of anki.
 * `<anki-version>`: The version specified of anki.
 * `<time-of-build>`: The exact time(+date) when the container was built
-  (following RFC 3339).
+  (using (`date` syntax): %Y-%m-%dt%H-%M-%Sz).
 
 ## Setup
 
@@ -48,7 +48,7 @@ There are three tags availableon both registries:
 ## Contributing
 
 * Contributions for newer versions or files are gracefully accepted but the
-  is to only generate a Docker/oci container.
+  scope is to only generate a docker/oci container.
 * Please try to wrap lines at 80 characters.
 
 ## License

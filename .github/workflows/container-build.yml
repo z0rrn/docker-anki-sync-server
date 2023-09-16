@@ -52,6 +52,9 @@ jobs:
         # get current date+time
         echo "time=$(date --utc +'%FT%TZ')" >> $GITHUB_OUTPUT
 
+        # get current date+time docker tag compatible
+        echo "time-docker=$(date --utc +'%Y-%m-%dt%H-%M-%Sz')" >> $GITHUB_OUTPUT
+
     - name: Build image
       id: build_image
       uses: redhat-actions/buildah-build@v2
@@ -78,10 +81,10 @@ jobs:
         tags: |
           ghcr.io/federdaemn/oci-anki-sync:latest
           ghcr.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.anki-version  }}
-          ghcr.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.time }}
+          ghcr.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.time-docker }}
           docker.io/federdaemn/oci-anki-sync:latest
           docker.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.anki-version  }}
-          docker.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.time }}
+          docker.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.time-docker }}
 
     - name: Push image
       uses: redhat-actions/push-to-registry@v2
