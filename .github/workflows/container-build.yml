@@ -65,13 +65,22 @@ jobs:
         
         # set labels to append to the image
         labels: |
-          org.opencontainers.image.title=oci-anki-sync
-          org.opencontainers.image.authors="Frederik Zorn <federdaemn@mail.de>"
-          org.opencontainers.image.created="${{ steps.set-op.outputs.time }}"
-          org.opencontainers.image.version="${{ steps.set-op.outputs.anki-version }}"
-          org.opencontainers.image.licenses="AGPL-3.0-or-later"
-          org.opencontainers.image.url="https://github.com/federdaemn/oci-anki-sync"
-          org.opencontainers.image.source="https://github.com/federdaemn/oci-anki-sync"
+          # opencontainer labels specified
+          # https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys
+          org.opencontainers.image.title='oci-anki-sync'
+          org.opencontainers.image.description='Anki sync server (anki-sync-server) in a container'
+          org.opencontainers.image.authors='Frederik Zorn'
+          org.opencontainers.image.created='${{ steps.set-op.outputs.time }}'
+          org.opencontainers.image.version='${{ steps.set-op.outputs.anki-version }}'
+          org.opencontainers.image.licenses='AGPL-3.0-or-later'
+          org.opencontainers.image.url='https://github.com/federdaemn/oci-anki-sync'
+          org.opencontainers.image.source='https://github.com/federdaemn/oci-anki-sync'
+
+          # artfifacthub labels specified
+          # https://artifacthub.io/docs/topics/repositories/container-images/#image-metadata
+          io.artifacthub.package.readme-url='https://raw.githubusercontent.com/federdaemn/oci-anki-sync/main/README.md'
+          io.artifacthub.package.keywords='anki,sync,server,anki-sync-server,anki-sync'
+          io.artifacthub.package.maintainers='[{"name":"federdaemn","email":"federdaemn@mail.de"}]'
         
         # build args to pass to the build
         build-args: |

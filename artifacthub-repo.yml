@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2023 Frederik Zorn <federdaemn@mail.de>
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Artifact Hub repository metadata file
+#
+# See documentation here: https://github.com/artifacthub/hub/blob/master/docs/metadata/artifacthub-repo.yml
+# and here: https://artifacthub.io/docs/topics/repositories/#verified-publisher
+#
+
+# optional, enables verified publisher
+repositoryID: 1c0df0d3-21af-4cb9-aaae-663cdaf93807
+
+# optional, used to claim repository ownership
+owners:
+  - name: federdaemn
+    email: federdaemn@mail.de
