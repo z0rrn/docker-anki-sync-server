@@ -35,8 +35,8 @@ RUN \
     cargo build --release --target x86_64-unknown-linux-gnu \
     --package anki-sync-server
 
-# copy binary to debian-slim container to reduce container size
-FROM docker.io/library/debian:stable-slim
+# copy binary container with nothing other to reduce container size
+FROM scratch
 
 # copy binary from builder
 COPY --from=builder /build/target/x86_64-unknown-linux-gnu/release/anki-sync-server /app/anki-sync-server
