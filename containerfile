@@ -8,28 +8,38 @@ FROM docker.io/library/rust:latest as builder
 # set anki version
 ARG anki_version
 
-# Set build directory (like cd)
-WORKDIR /build
-
 # upgrade system a. install dependency
 RUN \
   apt-get update && \
   apt-get upgrade -y && \
   apt-get install protobuf-compiler -y
 
+# git clone source repository of anki (only last commit, init submodules)
 RUN \
-  cargo install --root /app \
-  --git https://github.com/ankitects/anki.git --tag $anki_version \
-  anki-sync-server
+  git clone https://github.com/ankitects/anki.git \
+    --branch $anki_version --depth 1 --recurse-submodules \
+    /build
+
+# Set build directory (like cd)
+WORKDIR /build
+
+# build anki-sync-server
+# set PROTOC to use the installed protobuf compiler (error if not set)
+
+# set RUSTFLAGS (--target needed) to build static binary
+# source: https://msfjarvis.dev/posts/building-static-rust-binaries-for-linux/
+
+# build with release optimizations
+RUN \
+  PROTOC=/usr/bin/protoc RUSTFLAGS='-C target-feature=+crt-static' \
+    cargo build --release --target x86_64-unknown-linux-gnu \
+    --package anki-sync-server
 
 # copy binary to debian-slim container to reduce container size
 FROM docker.io/library/debian:stable-slim
 
 # copy binary from builder
-COPY --from=builder /app/bin/anki-sync-server /app/bin/anki-sync-server
-
-# create directory for anki config
-RUN mkdir -p /config
+COPY --from=builder /build/target/x86_64-unknown-linux-gnu/release/anki-sync-server /app/anki-sync-server
 
 ENV \
 # stores data in /config (VOLUME for persistence)
@@ -39,4 +49,4 @@ ENV \
   SYNC_PORT="27701"
 
 # don't forget to set at least SYNC_USER1
-CMD [ "/app/bin/anki-sync-server" ]
+CMD [ "/app/anki-sync-server" ]
