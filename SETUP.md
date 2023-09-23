@@ -6,4 +6,36 @@ SPDX-License-Identifier: Apache-2.0
 
 # Setup
 
-* This is a basic docker-compose.yml to setup anki.
+This is a basic docker-compose.yml to setup anki.
+
+```yaml
+version: "3.7"
+
+services:
+
+  oci-anki-sync:
+    # https://github.com/federdaemn/oci-anki-sync/blob/main/SETUP.md
+    image: ghcr.io/federdaemn/oci-anki-sync:2.1.66
+    container_name: oci-anki-sync
+    restart: unless-stopped
+    # these are sample passwords, please change them
+    environment:
+      - SYNC_USER1=panda:rsfPz4NXELBxmJ
+      - SYNC_USER2=penguin:2Qtf5nnsDpsQ3b
+    volumes:
+      - oci-anki-sync:/config
+    ports:
+      - 22701:22701
+
+volumes:
+  oci-anki-sync:
+```
+
+* the important parts are
+  * set SYNC_USERX to your desired username and password
+  * mount volume oci-anki-sync to /config
+  * open port 22701
+
+**for more configuration options see <https://docs.ankiweb.net/sync-server.html>**
+
+If you know how to configure another reverse-proxy please open an issue/pull request
