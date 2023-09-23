@@ -34,6 +34,9 @@ The container images are hosted on
 [GitHub Container Registry](https://github.com/federdaemn/oci-anki-sync/pkgs/container/oci-anki-sync)
 (recommended) and on
 [Docker Hub](https://hub.docker.com/r/federdaemn/oci-anki-sync) for redundancy.
+Additionally, the container images are also listed on
+[artifacthub.io](https://artifacthub.io) with the package name
+[`oci-anki-sync`](https://artifacthub.io/packages/container/oci-anki-sync/oci-anki-sync).
 
 There are three tags available on both registries:
 
