@@ -12,3 +12,7 @@ Source: https://github.com/federdaemn/oci-anki-sync
 Files: .vscode/*
 Copyright: 2023 Frederik Zorn <federdaemn@mail.de>
 License: Apache-2.0
+
+Files: imgs/anki/logo.png
+Copyright: Alex Fraser https://apps.ankiweb.net/
+License: LicenseRef-anki-logo

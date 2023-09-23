@@ -79,8 +79,10 @@ jobs:
           # artfifacthub labels specified
           # https://artifacthub.io/docs/topics/repositories/container-images/#image-metadata
           io.artifacthub.package.readme-url=https://raw.githubusercontent.com/federdaemn/oci-anki-sync/main/README.md
-          io.artifacthub.package.keywords=anki,sync,server,anki-sync-server,anki-sync
           io.artifacthub.package.maintainers=[{"name":"federdaemn","email":"federdaemn@mail.de"}]
+          io.artifacthub.package.keywords=anki,sync,server,anki-sync-server,anki-sync
+          io.artifacthub.package.logo-url=https://raw.githubusercontent.com/federdaemn/oci-anki-sync/main/imgs/anki/logo.png
+          io.artifacthub.package.alternative-locations=docker.io/federdaemn/oci-anki-sync
         
         # build args to pass to the build
         build-args: |
