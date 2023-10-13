@@ -27,7 +27,7 @@ jobs:
       uses: mikefarah/yq@v4
 
     - name: Setup oras
-      uses: oras-project/setup-oras@v1.1.0
+      uses: oras-project/setup-oras@v1
 
     - name: Login to GitHub Container Registry
       uses: redhat-actions/podman-login@v1
