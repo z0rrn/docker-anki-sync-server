@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-name: 'Update anki version in values.yml'
+name: 'Update anki-sync-server version in values.yml (GH API)'
 
 # run workflow every monday at 00:00 UTC
 on:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   update-version:
-    name: Update anki version in values.yml
+    name: Update anki-sync-server version in values.yml
 
     # use ubuntu as runner
     runs-on: ubuntu-latest
@@ -34,10 +34,10 @@ jobs:
     - name: Setup yq
       uses: mikefarah/yq@v4
 
-    - name: Get current anki version
-      id: anki-version
+    - name: Get current anki-sync-server version
+      id: set-op
       run: |
-        echo "anki-version=$(yq '.version.anki-version' ./values.yml)" \
+        echo "software-version=$(yq '.version.software-version' ./anki-sync-server/values.yml)" \
           >> $GITHUB_OUTPUT
 
     - name: Fetch GH API and get tag_name from latest release
@@ -53,18 +53,18 @@ jobs:
         # set output for later use
         echo "name=$tag_name" >> $GITHUB_OUTPUT
 
-    - name: Set new anki version in values.yml
-      if: ${{ steps.anki-version.outputs.anki-version != steps.get-release.outputs.name }}
+    - name: Set new anki-sync-server version in values.yml
+      if: ${{ steps.set-op.outputs.software-version != steps.get-release.outputs.name }}
       run: |
-        yq -i '.version.anki-version = "${{ steps.get-release.outputs.name }}"' \
-          ./values.yml
+        yq -i '.version.software-version = "${{ steps.get-release.outputs.name }}"' \
+          ./anki-sync-server/values.yml
 
     - name: Set up git email/name a. commit changes
-      if: ${{ steps.anki-version.outputs.anki-version != steps.get-release.outputs.name }}
+      if: ${{ steps.set-op.outputs.software-version != steps.get-release.outputs.name }}
       run: |
         git config user.name federdaemn-bot
         git config user.email federdaemn@mail.de
-        git add ./values.yml
-        git commit -m "chore(anki): bump anki version to ${{ steps.get-release.outputs.name }}" \
+        git add ./anki-sync-server/values.yml
+        git commit -m "chore(anki-sync-server): bump version to ${{ steps.get-release.outputs.name }}" \
           -m "Signed-off-by: github-actions in the name of Frederik Zorn <federdaemn@mail.de>"
         git push origin main

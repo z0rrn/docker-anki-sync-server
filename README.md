@@ -4,11 +4,29 @@ SPDX-FileCopyrightText: 2023 Frederik Zorn <federdaemn@mail.de>
 SPDX-License-Identifier: Apache-2.0
 -->
 
-# oci-anki-sync (anki-sync-server docker container) repository
+# docker anki-sync-server repository
 
-This contains a Dockerfile and Ci scripts to build a container image for
+This contains a dockerfile and CI/CD scripts to build a container image for
 [Anki Sync Server](https://apps.ankiweb.net/) using a scratch image as base
 image.
+
+## Warning
+
+This image is not official. Use at your own risk.
+
+## Images
+
+## Host Architecture
+
+This image is cross-compiled and thus available for
+
+* linux/amd64
+* linux/arm64
+
+I sadly can not build for linux/arm/v7
+(because of [build errors](https://github.com/rust-lang/cargo/issues/9545#issue-911773248))
+and for linux/riscv64 (because of missing
+[rust](https://hub.docker.com/_/rust/tags) container support).
 
 ## Updates and Versions
 
@@ -26,24 +44,26 @@ can forget this project exists :).
 ### Git
 
 This project is hosted on [GitHub](https://github.com) at the
-[federdaemn/oci-anki-sync](https://github.com/federdaemn/oci-anki-sync) project.
+[federdaemn/docker-anki-sync-server](https://github.com/federdaemn/docker-anki-sync-server)
+project.
 
 ### Container Registry
 
-The container images are hosted on
-[GitHub Container Registry](https://github.com/federdaemn/oci-anki-sync/pkgs/container/oci-anki-sync)
+You can find this image on
+[GitHub Container Registry](https://github.com/federdaemn/docker-anki-sync-server/pkgs/container/anki-sync-server)
 (recommended) and on
-[Docker Hub](https://hub.docker.com/r/federdaemn/oci-anki-sync) for redundancy.
-Additionally, the container images are also listed on
-[artifacthub.io](https://artifacthub.io) with the package name
-[`oci-anki-sync`](https://artifacthub.io/packages/container/oci-anki-sync/oci-anki-sync).
+[Docker Hub](https://hub.docker.com/r/federdaemn/anki-sync-server) for
+redundancy. The Artifact Hub name is
+[`anki-sync-server`](https://artifacthub.io/packages/container/anki-sync-server/anki-sync-server).
 
-There are three tags available on both registries:
+There are four tags available:
 
 * `latest`: Always the latest version of anki.
 * `<anki-version>`: The version specified of anki.
-* `<time-of-build>`: The exact time(+date) when the container was built
+* `<time-of-build>`: The exact time (+ date) when the container was built
   (using (`date` syntax): %Y-%m-%dt%H-%M-%Sz).
+* `artifacthub.io`: You may ignore this. This is just for Artifact Hub Verified
+  Publisher.
 
 ## Setup
 
@@ -51,9 +71,9 @@ There are three tags available on both registries:
 
 ## Contributing
 
-* Contributions for newer versions or files are gracefully accepted but the
-  scope is to only generate an auto-updating docker/oci container.
-* Please try to wrap lines at 80 characters.
+* Contributions for newer versions or files are gracefully accepted. Even things
+  like small speed improvements are helpfull.
+* Please try to wrap all lines at 80 characters.
 
 ## License
 

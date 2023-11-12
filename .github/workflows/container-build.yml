@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-name: 'Build and push anki-sync container'
+name: 'Build and push image'
 
 # run workflow on every branch, only upload on main (allow manual trigger)
 on: [push, pull_request, workflow_dispatch]
@@ -27,10 +27,17 @@ jobs:
       uses: mikefarah/yq@v4
 
     - name: Setup oras
+      if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
       uses: oras-project/setup-oras@v1
 
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
     - name: Login to GitHub Container Registry
-      uses: redhat-actions/podman-login@v1
+      uses: docker/login-action@v3
       if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
       with:
         registry: ghcr.io
@@ -38,10 +45,9 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Login to DockerHub
-      uses: redhat-actions/podman-login@v1
+      uses: docker/login-action@v3
       if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
       with:
-        registry: docker.io
         username: federdaemn
         password: ${{ secrets.DOCKER_TOKEN }}
 
@@ -49,7 +55,7 @@ jobs:
       id: set-op
       run: |
         # extract version from ./values.yml
-        echo "anki-version=$(yq '.version.anki-version' ./values.yml)" \
+        echo "software-version=$(yq '.version.software-version' ./anki-sync-server/values.yml)" \
           >> $GITHUB_OUTPUT
 
         # get current date+time
@@ -58,59 +64,76 @@ jobs:
         # get current date+time docker tag compatible
         echo "time-docker=$(date --utc +'%Y-%m-%dt%H-%M-%Sz')" >> $GITHUB_OUTPUT
 
-    - name: Build image
-      id: build_image
-      uses: redhat-actions/buildah-build@v2
+    - name: Build and push image in production
+      uses: docker/build-push-action@v5
+      if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
       with:
-        # which containerfile to build from
-        containerfiles: |
-          ./containerfile
+        # directly push image
+        push: true
         
-        # set labels to append to the image
-        labels: |
-          # opencontainer labels specified
-          # https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys
-          org.opencontainers.image.title=oci-anki-sync
-          org.opencontainers.image.description=Anki sync server (anki-sync-server) in a container
-          org.opencontainers.image.authors=Frederik Zorn <federdaemnmail.de>
-          org.opencontainers.image.created=${{ steps.set-op.outputs.time }}
-          org.opencontainers.image.version=${{ steps.set-op.outputs.anki-version }}
-          org.opencontainers.image.licenses=AGPL-3.0-or-later
-          org.opencontainers.image.url=https://github.com/federdaemn/oci-anki-sync
-          org.opencontainers.image.source=https://github.com/federdaemn/oci-anki-sync
+        # use local repository
+        context: .
 
-          # artfifacthub labels specified
-          # https://artifacthub.io/docs/topics/repositories/container-images/#image-metadata
-          io.artifacthub.package.readme-url=https://raw.githubusercontent.com/federdaemn/oci-anki-sync/main/README.md
-          io.artifacthub.package.maintainers=[{"name":"federdaemn","email":"federdaemn@mail.de"}]
-          io.artifacthub.package.keywords=anki,sync,server,anki-sync-server,anki-sync
-          io.artifacthub.package.logo-url=https://raw.githubusercontent.com/federdaemn/oci-anki-sync/main/imgs/anki/logo.png
-          io.artifacthub.package.alternative-locations=docker.io/federdaemn/oci-anki-sync
+        # which containerfile to build from
+        file: |
+          ./anki-sync-server/containerfile
         
         # build args to pass to the build
         build-args: |
-          anki_version=${{ steps.set-op.outputs.anki-version  }}
+          software_version=${{ steps.set-op.outputs.software-version  }}
+
+        # build for many platforms at the same time
+        platforms: |
+          linux/amd64
+          linux/arm64
+        
+        # set labels to append to the image
+        labels: |
+          org.opencontainers.image.created=${{ steps.set-op.outputs.time }}
+          org.opencontainers.image.version=${{ steps.set-op.outputs.software-version }}
         
         # tags to build the image with
         tags: |
-          ghcr.io/federdaemn/oci-anki-sync:latest
-          ghcr.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.anki-version  }}
-          ghcr.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.time-docker }}
-          docker.io/federdaemn/oci-anki-sync:latest
-          docker.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.anki-version  }}
-          docker.io/federdaemn/oci-anki-sync:${{ steps.set-op.outputs.time-docker }}
-
-    - name: Push image
-      uses: redhat-actions/push-to-registry@v2
-      if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-      with:
-        tags: ${{ steps.build_image.outputs.tags }}
+          ghcr.io/federdaemn/anki-sync-server:latest
+          ghcr.io/federdaemn/anki-sync-server:${{ steps.set-op.outputs.software-version  }}
+          ghcr.io/federdaemn/anki-sync-server:${{ steps.set-op.outputs.time-docker }}
+          docker.io/federdaemn/anki-sync-server:latest
+          docker.io/federdaemn/anki-sync-server:${{ steps.set-op.outputs.software-version  }}
+          docker.io/federdaemn/anki-sync-server:${{ steps.set-op.outputs.time-docker }}
     
-    # use oras to push artifacthub metadata to ghcr.io
+    - name: Build image in testing only
+      uses: docker/build-push-action@v5
+      if: github.event_name == 'pull_request'
+      with:
+        # do not push image
+        push: false
+        
+        # use local repository
+        context: .
+
+        # which containerfile to build from
+        file: |
+          ./anki-sync-server/containerfile
+        
+        # build args to pass to the build
+        build-args: |
+          software_version=${{ steps.set-op.outputs.software-version  }}
+        
+        # build for many platforms at the same time
+        platforms: |
+          linux/amd64
+          linux/arm64
+
+    # use oras to push artifacthub metadata to registries
     # source: https://artifacthub.io/docs/topics/repositories/container-images/#repository-metadata
     - name: Push metadata
+      if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
       run: |
         oras push \
-          ghcr.io/federdaemn/oci-anki-sync:artifacthub.io \
+          ghcr.io/federdaemn/anki-sync-server:artifacthub.io \
           --config /dev/null:application/vnd.cncf.artifacthub.config.v1+yaml \
-          artifacthub-repo.yml:application/vnd.cncf.artifacthub.repository-metadata.layer.v1.yaml
+          anki-sync-server/artifacthub-repo.yml:application/vnd.cncf.artifacthub.repository-metadata.layer.v1.yaml
+        oras push \
+          docker.io/federdaemn/anki-sync-server:artifacthub.io \
+          --config /dev/null:application/vnd.cncf.artifacthub.config.v1+yaml \
+          anki-sync-server/artifacthub-repo.yml:application/vnd.cncf.artifacthub.repository-metadata.layer.v1.yaml

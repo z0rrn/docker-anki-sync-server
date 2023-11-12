@@ -20,15 +20,3 @@ updates:
     # prefix all commit messages with "chore(deps): "
     commit-message:
       prefix: "chore(deps): "
-
-    # Create a group of dependencies to be updated together in one pull request
-    groups:
-      # Update all dependencies from redhat-actions together
-      redhat-actions:
-        patterns:
-        - "redhat-actions/*"
-
-      # Update all non-specified dependencies together
-      all:
-        patterns:
-        - "*"

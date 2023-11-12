@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: oci-anki-sync
+Upstream-Name: docker-anki-sync-server
 Upstream-Contact: Frederik Zorn <federdaemn@mail.de>
-Source: https://github.com/federdaemn/oci-anki-sync
+Source: https://github.com/federdaemn/docker-anki-sync-server
 
 # Sample paragraph, commented out:
 #
@@ -13,6 +13,6 @@ Files: .vscode/*
 Copyright: 2023 Frederik Zorn <federdaemn@mail.de>
 License: Apache-2.0
 
-Files: imgs/anki/logo.png
+Files: anki-sync-server/imgs/ah-logo.png
 Copyright: Alex Fraser https://apps.ankiweb.net/
 License: LicenseRef-anki-logo
