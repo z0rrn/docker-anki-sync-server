@@ -21,7 +21,7 @@ case $TARGET in
 
   "amd64")
 	  echo "x86_64-unknown-linux-gnu" > /.cargo-platform.txt
-    echo "NOTHING=unimportant" > /.cargo-linker.txt
+    echo "NOTHING=nothing" > /.cargo-linker.txt
     echo "gcc g++" > /.c-compiler.txt
 	;;
   "arm64") 

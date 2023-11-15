@@ -14,8 +14,8 @@ version: "3.7"
 services:
 
   anki-sync-server:
-    # https://github.com/federdaemn/anki-sync-server/blob/main/SETUP.md
-    image: ghcr.io/federdaemn/anki-sync-server:2.1.66
+    # https://github.com/federdaemn/docker-anki-sync-server/blob/main/SETUP.md
+    image: ghcr.io/federdaemn/anki-sync-server:23.10.1
     container_name: anki-sync-server
     restart: unless-stopped
     # these are sample passwords, please change them
