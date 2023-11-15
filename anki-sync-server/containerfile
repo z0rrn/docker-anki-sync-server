@@ -55,6 +55,9 @@ RUN \
 # copy binary container with nothing other to reduce container size
 FROM scratch
 
+# copy /etc/passwd because docker cannot create one in a scratch container
+COPY tools/minimal-passwd.txt /etc/passwd
+
 # copy binary from builder
 COPY --from=builder /output/anki-sync-server /app/anki-sync-server
 
@@ -65,7 +68,7 @@ ENV \
   SYNC_PORT="27701"
 
 # switch user for better security
-USER anki-sync-server
+USER scratch-user
 
 # don't forget to set at least SYNC_USER1
 CMD [ "/app/anki-sync-server" ]
