@@ -12,9 +12,9 @@ ARG software_version
 ARG TARGETARCH
 ARG TARGETVARIANT
 
-# see script
+# create empty directory (to be copied into scratch image) a. see script
 COPY ../tools/convert-arch-cargo.sh .
-RUN sh ./convert-arch-cargo.sh
+RUN mkdir /empty && sh ./convert-arch-cargo.sh
 
 # upgrade system and install dependencies:
 # protocol buffer compiler + gcc/g++ compiler for specific arch
@@ -57,6 +57,9 @@ FROM scratch
 
 # copy /etc/passwd because docker cannot create one in a scratch container
 COPY tools/minimal-passwd.txt /etc/passwd
+
+#copy empty directory to anki config dir (make accessible for the user)
+COPY --from=builder --chown=65534:65534 /empty /config
 
 # copy binary from builder
 COPY --from=builder /output/anki-sync-server /app/anki-sync-server

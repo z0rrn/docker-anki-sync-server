@@ -1,1 +1,1 @@
-scratch-user:*:65534:65534:scratch-user:/nonexistent:/sbin/nologin
+scratch-user:*:65534:65534:scratch-user:/config:/sbin/nologin
