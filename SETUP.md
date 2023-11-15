@@ -25,7 +25,7 @@ services:
     volumes:
       - anki-sync-server:/config
     ports:
-      - 22701:22701
+      - 27701:27701
 
 volumes:
   anki-sync-server:
@@ -34,7 +34,7 @@ volumes:
 * the important parts are
   * set SYNC_USERX to your desired username and password
   * mount volume anki-sync-server to /config
-  * open port 22701
+  * open port 27701
 
 **for more configuration options see <https://docs.ankiweb.net/sync-server.html>**
 

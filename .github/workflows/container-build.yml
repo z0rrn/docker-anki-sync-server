@@ -5,7 +5,16 @@
 name: 'Build and push image'
 
 # run workflow on every branch, only upload on main (allow manual trigger)
-on: [push, pull_request, workflow_dispatch]
+on:
+  
+  # build image on push
+  push:
+    # don't build if only docs changed
+    paths-ignore:
+    - "**.md"
+  
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   build-push:
