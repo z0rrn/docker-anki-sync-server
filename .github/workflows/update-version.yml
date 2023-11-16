@@ -2,12 +2,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-name: 'Update anki-sync-server version in values.yml (GH API)'
+name: "Update anki-sync-server version in values.yml (GH API)"
 
 # run workflow every monday at 00:00 UTC
 on:
   schedule:
-    - cron: '0 0 * * 1'
+    - cron: "0 0 * * 1"
   workflow_dispatch:
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
     # use ubuntu as runner
     runs-on: ubuntu-latest
 
-    # add GH token to secrets as GH_ANKI_VERSION_TOKEN 
+    # add GH token to secrets as GH_ANKI_VERSION_TOKEN
     # with write access to repository
     # to allow workflow to write to repository
     #
@@ -25,46 +25,45 @@ jobs:
     # see here: <https://stackoverflow.com/a/73489863>
 
     steps:
-    
-    - name: Checkout the repository
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GH_ANKI_VERSION_TOKEN }}
-    
-    - name: Setup yq
-      uses: mikefarah/yq@v4
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_ANKI_VERSION_TOKEN }}
 
-    - name: Get current anki-sync-server version
-      id: set-op
-      run: |
-        echo "software-version=$(yq '.version.software-version' ./anki-sync-server/values.yml)" \
-          >> $GITHUB_OUTPUT
+      - name: Setup yq
+        uses: mikefarah/yq@v4
 
-    - name: Fetch GH API and get tag_name from latest release
-      id: get-release
-      run: |
-        # get latest release a. extract tag_name
-        tag_name=$(curl -L \
-          -H "Accept: application/vnd.github+json" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          https://api.github.com/repos/ankitects/anki/releases/latest |\
-          yq '.tag_name')
+      - name: Get current anki-sync-server version
+        id: set-op
+        run: |
+          echo "software-version=$(yq '.version.software-version' ./anki-sync-server/values.yml)" \
+            >> $GITHUB_OUTPUT
+
+      - name: Fetch GH API and get tag_name from latest release
+        id: get-release
+        run: |
+          # get latest release a. extract tag_name
+          tag_name=$(curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/ankitects/anki/releases/latest |\
+            yq '.tag_name')
             
-        # set output for later use
-        echo "name=$tag_name" >> $GITHUB_OUTPUT
+          # set output for later use
+          echo "name=$tag_name" >> $GITHUB_OUTPUT
 
-    - name: Set new anki-sync-server version in values.yml
-      if: ${{ steps.set-op.outputs.software-version != steps.get-release.outputs.name }}
-      run: |
-        yq -i '.version.software-version = "${{ steps.get-release.outputs.name }}"' \
-          ./anki-sync-server/values.yml
+      - name: Set new anki-sync-server version in values.yml
+        if: ${{ steps.set-op.outputs.software-version != steps.get-release.outputs.name }}
+        run: |
+          yq -i '.version.software-version = "${{ steps.get-release.outputs.name }}"' \
+            ./anki-sync-server/values.yml
 
-    - name: Set up git email/name a. commit changes
-      if: ${{ steps.set-op.outputs.software-version != steps.get-release.outputs.name }}
-      run: |
-        git config user.name federdaemn-bot
-        git config user.email federdaemn@mail.de
-        git add ./anki-sync-server/values.yml
-        git commit -m "chore(anki-sync-server): bump version to ${{ steps.get-release.outputs.name }}" \
-          -m "Signed-off-by: github-actions in the name of Frederik Zorn <federdaemn@mail.de>"
-        git push origin main
+      - name: Set up git email/name a. commit changes
+        if: ${{ steps.set-op.outputs.software-version != steps.get-release.outputs.name }}
+        run: |
+          git config user.name federdaemn-bot
+          git config user.email federdaemn@mail.de
+          git add ./anki-sync-server/values.yml
+          git commit -m "chore(anki-sync-server): bump version to ${{ steps.get-release.outputs.name }}" \
+            -m "Signed-off-by: github-actions in the name of Frederik Zorn <federdaemn@mail.de>"
+          git push origin main

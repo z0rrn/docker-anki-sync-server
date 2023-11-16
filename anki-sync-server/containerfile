@@ -2,10 +2,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# use the official Rust image with debian base as builder
+# use the official rust image with debian base as builder
 FROM --platform=$BUILDPLATFORM docker.io/library/rust:latest as builder
 
-# set anki version
+# retrieve software version from cli (--build-arg)
 ARG software_version
 
 # make multi-platform args available to process
@@ -58,7 +58,7 @@ FROM scratch
 # copy /etc/passwd because docker cannot create one in a scratch container
 COPY tools/minimal-passwd.txt /etc/passwd
 
-#copy empty directory to anki config dir (make accessible for the user)
+# copy empty directory to anki config dir (make accessible for the user)
 COPY --from=builder --chown=65534:65534 /empty /config
 
 # copy binary from builder

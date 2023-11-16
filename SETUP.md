@@ -12,7 +12,6 @@ This is a basic docker-compose.yml to setup anki.
 version: "3.7"
 
 services:
-
   anki-sync-server:
     # https://github.com/federdaemn/docker-anki-sync-server/blob/main/SETUP.md
     image: ghcr.io/federdaemn/anki-sync-server:23.10.1
@@ -31,10 +30,10 @@ volumes:
   anki-sync-server:
 ```
 
-* the important parts are
-  * set SYNC_USERX to your desired username and password
-  * mount volume anki-sync-server to /config
-  * open port 27701
+- the important parts are
+  - set SYNC_USERX to your desired username and password
+  - mount volume anki-sync-server to /config
+  - open port 27701
 
 **for more configuration options see <https://docs.ankiweb.net/sync-server.html>**
 

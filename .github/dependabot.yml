@@ -9,8 +9,7 @@
 
 version: 2
 updates:
-
-    # see documentation for possible values
+  # see documentation for possible values
   - package-ecosystem: "github-actions"
     # location of package manifests (/ for github-actions)
     directory: "/"
