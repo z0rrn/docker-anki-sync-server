@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 Frederik Zorn <federdaemn@mail.de>
+# SPDX-FileCopyrightText: 2023 Frederik Zorn <fz@zorrn.net>
 #
 # SPDX-License-Identifier: Apache-2.0
 

@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: docker-anki-sync-server
-Upstream-Contact: Frederik Zorn <federdaemn@mail.de>
-Source: https://github.com/federdaemn/docker-anki-sync-server
+Upstream-Contact: Frederik Zorn <fz@zorrn.net>
+Source: https://github.com/z0rrn/docker-anki-sync-server
 
 # Sample paragraph, commented out:
 #
@@ -10,14 +10,14 @@ Source: https://github.com/federdaemn/docker-anki-sync-server
 # License: ...
 
 Files: .vscode/*
-Copyright: 2023 Frederik Zorn <federdaemn@mail.de>
+Copyright: 2023 Frederik Zorn <fz@zorrn.net>
 License: Apache-2.0
 
 Files: anki-sync-server/imgs/ah-logo.png
 Copyright: Alex Fraser https://apps.ankiweb.net/
 License: LicenseRef-anki-logo
 
-# this file contains the user used in the container (see https://github.com/federdaemn/docker-anki-sync-server/issues/2)
+# this file contains the user used in the container (see https://github.com/z0rrn/docker-anki-sync-server/issues/2)
 Files: tools/minimal-passwd.txt
-Copyright: 2023 Frederik Zorn <federdaemn@mail.de>
+Copyright: 2023 Frederik Zorn <fz@zorrn.net>
 License: Apache-2.0

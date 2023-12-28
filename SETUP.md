@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2023 Frederik Zorn <federdaemn@mail.de>
+SPDX-FileCopyrightText: 2023 Frederik Zorn <fz@zorrn.net>
 
 SPDX-License-Identifier: Apache-2.0
 -->
@@ -13,8 +13,8 @@ version: "3.7"
 
 services:
   anki-sync-server:
-    # https://github.com/federdaemn/docker-anki-sync-server/blob/main/SETUP.md
-    image: ghcr.io/federdaemn/anki-sync-server:23.10.1
+    # https://github.com/z0rrn/docker-anki-sync-server/blob/main/SETUP.md
+    image: ghcr.io/z0rrn/anki-sync-server:23.10.1
     container_name: anki-sync-server
     restart: unless-stopped
     # these are sample passwords, please change them

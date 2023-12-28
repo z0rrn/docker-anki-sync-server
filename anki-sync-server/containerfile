@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 Frederik Zorn <federdaemn@mail.de>
+# SPDX-FileCopyrightText: 2023 Frederik Zorn <fz@zorrn.net>
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -82,13 +82,13 @@ LABEL \
 # https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys
   "org.opencontainers.image.title"="anki-sync-server" \
   "org.opencontainers.image.description"="Anki Sync Server (anki-sync-server) docker/oci container" \
-  "org.opencontainers.image.authors"="Frederik Zorn <federdaemn@mail.de>" \
-  "org.opencontainers.image.source"="https://github.com/federdaemn/docker-anki-sync-server" \
+  "org.opencontainers.image.authors"="Frederik Zorn <fz@zorrn.net>" \
+  "org.opencontainers.image.source"="https://github.com/z0rrn/docker-anki-sync-server" \
   "org.opencontainers.image.licenses"="AGPL-3.0-or-later" \
 # artfifacthub labels specified
 # https://artifacthub.io/docs/topics/repositories/container-images/#image-metadata
-  "io.artifacthub.package.readme-url"="https://raw.githubusercontent.com/federdaemn/docker-anki-sync-server/main/README.md" \
-  "io.artifacthub.package.maintainers"="[{"name":"federdaemn","email":"federdaemn@mail.de"}]" \
-  "io.artifacthub.package.logo-url"="https://raw.githubusercontent.com/federdaemn/docker-anki-sync-server/main/anki-sync-server/imgs/ah-logo.png" \
-  "io.artifacthub.package.alternative-locations"="docker.io/federdaemn/anki-sync-server" \
+  "io.artifacthub.package.readme-url"="https://raw.githubusercontent.com/z0rrn/docker-anki-sync-server/main/README.md" \
+  "io.artifacthub.package.maintainers"="[{"name":"z0rrn","email":"fz@zorrn.net"}]" \
+  "io.artifacthub.package.logo-url"="https://raw.githubusercontent.com/z0rrn/docker-anki-sync-server/main/anki-sync-server/imgs/ah-logo.png" \
+  "io.artifacthub.package.alternative-locations"="docker.io/zorrn/anki-sync-server" \
   "io.artifacthub.package.keywords"="anki,sync,server,anki-sync-server,anki-sync"

@@ -1,5 +1,5 @@
 <!--
-SPDX-FileCopyrightText: 2023 Frederik Zorn <federdaemn@mail.de>
+SPDX-FileCopyrightText: 2023 Frederik Zorn <fz@zorrn.net>
 
 SPDX-License-Identifier: Apache-2.0
 -->
@@ -44,17 +44,16 @@ can forget this project exists :).
 ### Git
 
 This project is hosted on [GitHub](https://github.com) at the
-[federdaemn/docker-anki-sync-server](https://github.com/federdaemn/docker-anki-sync-server)
+[z0rrn/docker-anki-sync-server](https://github.com/z0rrn/docker-anki-sync-server)
 project.
 
 ### Container Registry
 
 You can find this image on
-[GitHub Container Registry](https://github.com/federdaemn/docker-anki-sync-server/pkgs/container/anki-sync-server)
+[GitHub Container Registry](https://github.com/z0rrn/docker-anki-sync-server/pkgs/container/anki-sync-server)
 (recommended) and on
-[Docker Hub](https://hub.docker.com/r/federdaemn/anki-sync-server) for
-redundancy. The Artifact Hub name is
-[`anki-sync-server`](https://artifacthub.io/packages/container/anki-sync-server/anki-sync-server).
+[Docker Hub](https://hub.docker.com/r/zorrn/anki-sync-server) for
+redundancy.
 
 There are four tags available:
 
@@ -62,8 +61,6 @@ There are four tags available:
 - `<anki-version>`: The version specified of anki.
 - `<time-of-build>`: The exact time (+ date) when the container was built
   (using (`date` syntax): %Y-%m-%dt%H-%M-%Sz).
-- `artifacthub.io`: You may ignore this. This is just for Artifact Hub Verified
-  Publisher.
 
 ## Setup
 

@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 Frederik Zorn <federdaemn@mail.de>
+# SPDX-FileCopyrightText: 2023 Frederik Zorn <fz@zorrn.net>
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -61,9 +61,9 @@ jobs:
       - name: Set up git email/name a. commit changes
         if: ${{ steps.set-op.outputs.software-version != steps.get-release.outputs.name }}
         run: |
-          git config user.name federdaemn-bot
-          git config user.email federdaemn@mail.de
+          git config user.name z0rrn-bot
+          git config user.email fz@zorrn.net
           git add ./anki-sync-server/values.yml
           git commit -m "chore(anki-sync-server): bump version to ${{ steps.get-release.outputs.name }}" \
-            -m "Signed-off-by: github-actions in the name of Frederik Zorn <federdaemn@mail.de>"
+            -m "Signed-off-by: github-actions in the name of Frederik Zorn <fz@zorrn.net>"
           git push origin main
