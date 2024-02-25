@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2023 Frederik Zorn <fz@zorrn.net>
-#
-# SPDX-License-Identifier: Apache-2.0
-
 # convert docker-style target architecture (e.g. linux/arm/v7) to
 # cargo-style target architecture (e.g. armv7-unknown-linux-gnueabihf)
 

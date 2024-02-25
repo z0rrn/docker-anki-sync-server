@@ -1,10 +1,4 @@
-<!--
-SPDX-FileCopyrightText: 2023 Frederik Zorn <fz@zorrn.net>
-
-SPDX-License-Identifier: Apache-2.0
--->
-
-# docker anki-sync-server repository
+# docker anki-sync-server
 
 This contains a dockerfile and CI/CD scripts to build a container image for
 [Anki Sync Server](https://apps.ankiweb.net/) using a scratch image as base
@@ -39,15 +33,7 @@ and for linux/riscv64 (because of missing
 Result: The container is always up-to-date (at least after every Monday) and I
 can forget this project exists :).
 
-## Hosting
-
-### Git
-
-This project is hosted on [GitHub](https://github.com) at the
-[z0rrn/docker-anki-sync-server](https://github.com/z0rrn/docker-anki-sync-server)
-project.
-
-### Container Registry
+## Container Registry
 
 You can find this image on
 [GitHub Container Registry](https://github.com/z0rrn/docker-anki-sync-server/pkgs/container/anki-sync-server)
@@ -70,14 +56,8 @@ There are four tags available:
 
 - Contributions for newer versions or files are gracefully accepted. Even things
   like small speed improvements are helpfull.
-- Please try to wrap all lines at 80 characters.
 
 ## License
 
-TL;DR before we dive in to legalese:
-
-- Most files are licensed under Apache-2.0, unless noted in the file header or
-  the `.reuse/dep5` file.
-- For contributors who wish to send patches, an agreement to the
-  [DCO](https://developercertificate.org/) (via `--signoff` flag on commits) is
-  required.
+- Most files are licensed under Apache-2.0. Exeptions:
+  - the anki logo (anki-sync-server/imgs/ah-logo): `LICENSE-ANKI-LOGO`

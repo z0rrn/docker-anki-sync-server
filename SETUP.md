@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2023 Frederik Zorn <fz@zorrn.net>
-
-SPDX-License-Identifier: Apache-2.0
--->
-
 # Setup
 
 This is a basic docker-compose.yml to setup anki.

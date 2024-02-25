@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2023 Frederik Zorn <fz@zorrn.net>
-#
-# SPDX-License-Identifier: Apache-2.0
-
 # use the official rust image with debian base as builder
 FROM --platform=$BUILDPLATFORM docker.io/library/rust:latest as builder
 
