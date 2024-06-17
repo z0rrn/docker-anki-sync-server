@@ -64,7 +64,7 @@ jobs:
           echo "time-docker=$(date --utc +'%Y-%m-%dt%H-%M-%Sz')" >> $GITHUB_OUTPUT
 
       - name: Build and push image in production
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         with:
           # directly push image
@@ -101,7 +101,7 @@ jobs:
             docker.io/zorrn/anki-sync-server:${{ steps.set-op.outputs.time-docker }}
 
       - name: Build image in testing only
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         if: github.event_name == 'pull_request'
         with:
           # do not push image
