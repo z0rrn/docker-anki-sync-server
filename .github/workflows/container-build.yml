@@ -10,6 +10,12 @@ on:
 
   pull_request:
   workflow_dispatch:
+    inputs:
+      debug_enabled:
+        description: "Enable SSH access at the end of the workflow"
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   build-push:
@@ -75,7 +81,7 @@ jobs:
 
           # which containerfile to build from
           file: |
-            ./anki-sync-server/containerfile
+            ./anki-sync-server/Dockerfile
 
           # build args to pass to the build
           build-args: |
@@ -112,8 +118,7 @@ jobs:
 
           # which containerfile to build from
           file: |
-            ./anki-sync-server/containerfile
-
+            ./anki-sync-server/Dockerfile
           # build args to pass to the build
           build-args: |
             software_version=${{ steps.set-op.outputs.software-version  }}
@@ -122,3 +127,8 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm64
+
+      # Enable ssh debugging of manually-triggered workflows if the input option was provided or on failure
+      - name: Setup interactive ssh session
+        uses: Warpbuilds/action-debugger@v1.3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }} || ${{ failure() }}
