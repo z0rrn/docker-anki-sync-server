@@ -12,6 +12,6 @@ updates:
     # when to check for updates
     schedule:
       interval: "weekly"
-    # prefix all commit messages with "chore(deps): "
+    # prefix all commit messages with "chore(gh-actions): "
     commit-message:
-      prefix: "chore(deps): "
+      prefix: "chore(gh-actions): "

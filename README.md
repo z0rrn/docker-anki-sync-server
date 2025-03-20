@@ -1,63 +1,55 @@
-# docker anki-sync-server
+# Docker anki-sync-server
 
-This contains a dockerfile and CI/CD scripts to build a container image for
-[Anki Sync Server](https://apps.ankiweb.net/) using a scratch image as base
-image.
+Docker image for [Anki Sync Server](https://apps.ankiweb.net/).
 
-## Warning
+> [!CAUTION]
+> This image is not official. Use at your own risk.
 
-This image is not official. Use at your own risk.
+## Information
 
-## Images
-
-## Host Architecture
-
-This image is cross-compiled and thus available for
+This image is  available for following architectures:
 
 - linux/amd64
 - linux/arm64
 
-I sadly can not build for linux/arm/v7
-(because of [build errors](https://github.com/rust-lang/cargo/issues/9545#issue-911773248))
-and for linux/riscv64 (because of missing
-[rust](https://hub.docker.com/_/rust/tags) container support).
+The container and the actions are auto-updated whenever a new version of anki is released. This is done by a GitHub Action and I can forget this project exists :).
 
-## Updates and Versions
+You can find this image on [GHCR](https://github.com/z0rrn/anki-sync-server-docker/pkgs/container/anki-sync-server) and on [Docker Hub](https://hub.docker.com/r/zorrn/anki-sync-server).
 
-- The container is auto-updated every Monday whenever a new version of anki is
-  released. This is done by a GitHub Action and happens without any manual
-  intervention or review.
-- The actions are also auto-updated through dependabot.
-- The image which is used to build is always the latest version of Debian Linux.
+Available tags for production:
 
-Result: The container is always up-to-date (at least after every Monday) and I
-can forget this project exists :).
-
-## Container Registry
-
-You can find this image on
-[GitHub Container Registry](https://github.com/z0rrn/docker-anki-sync-server/pkgs/container/anki-sync-server)
-(recommended) and on
-[Docker Hub](https://hub.docker.com/r/zorrn/anki-sync-server) for
-redundancy.
-
-There are four tags available:
-
-- `latest`: Always the latest version of anki.
-- `<anki-version>`: The version specified of anki.
-- `<time-of-build>`: The exact time (+ date) when the container was built
-  (using (`date` syntax): %Y-%m-%dt%H-%M-%Sz).
+- `latest`: Latest version of anki.
+- `<anki version>`: Specified version of anki.
+- `sha-<git commit hash>`: Git commit hash.
 
 ## Setup
 
-- See SETUP.md for detailed instructions.
+This is a basic docker-compose.yml to setup anki.
 
-## Contributing
+```yaml
+services:
+  # https://github.com/z0rrn/anki-sync-server-docker
+  anki-sync-server:
+    image: ghcr.io/z0rrn/anki-sync-server:25.02
+    # these are sample passwords, please change them
+    environment:
+      - SYNC_USER1=panda:rsfPz4NXELBxmJ
+      - SYNC_USER2=penguin:2Qtf5nnsDpsQ3b
+    volumes:
+      - anki-sync-server:/config
+    ports:
+      - 27701:27701
 
-- Contributions for newer versions or files are gracefully accepted. Even things
-  like small speed improvements are helpfull.
+volumes:
+  anki-sync-server:
+```
 
-## License
+Set SYNC_USERX (more users are possible) to your desired username and password and open port 27701 in your reverse-proxy or firewall.
 
-- Most files are licensed under Apache-2.0. Exeptions:
-  - the anki logo (anki-sync-server/imgs/ah-logo): `LICENSE-ANKI-LOGO`
+**For more configuration options see <https://docs.ankiweb.net/sync-server.html>**
+
+If you know how to configure a reverse-proxy please open an issue/pull request.
+
+## Contributing & License
+
+Contributions are welcome. All files are licensed under Apache-2.0.

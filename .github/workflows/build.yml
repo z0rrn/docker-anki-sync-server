@@ -1,0 +1,150 @@
+name: "Build and push image"
+
+on:
+  push:
+    # don't build if only docs changed
+    paths-ignore:
+      - "**.md"
+  pull_request:
+  workflow_dispatch:
+
+# Set anki-sync-server version
+env:
+  anki_version: 25.02
+
+# Enable SSH access to workflow
+#- name: Setup interactive ssh session
+#  uses: Warpbuilds/action-debugger@v1.3
+
+jobs:
+  build-packages:
+    name: "Build packages"
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            rust_target: x86_64-unknown-linux-gnu
+            docker_platform: linux-amd64
+          - os: ubuntu-24.04-arm
+            rust_target: aarch64-unknown-linux-gnu
+            docker_platform: linux-arm64
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mikefarah/yq@v4
+      - uses: arduino/setup-protoc@v3
+
+      - name: Install Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          target: ${{ matrix.rust_target }}
+
+      - name: Clone ankitects/anki repository
+        uses: actions/checkout@v4
+        with:
+          repository: ankitects/anki
+          ref: ${{ env.anki_version }}
+          path: ankitects-anki
+          submodules: true
+
+      - name: Build anki-sync-server with release profile
+        run: |
+          cd ${{ github.workspace }}/ankitects-anki/
+          PROTOC=$(which protoc) \
+          RUSTFLAGS='-C target-feature=+crt-static' \
+          cargo build --release --target ${{ matrix.rust_target }} --package anki-sync-server
+
+      #- name: Generate fake artifacts
+      #  run: |
+      #    mkdir -p ${{ github.workspace }}/ankitects-anki/target/${{ matrix.rust_target }}/release
+      #    echo "Test artifact for ${{ matrix.rust_target }}" > ${{ github.workspace }}/ankitects-anki/target/${{ matrix.rust_target }}/release/anki-sync-server
+
+      - name: Upload binary as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: anki-sync-server-${{ matrix.docker_platform }}
+          path: ${{ github.workspace }}/ankitects-anki/target/${{ matrix.rust_target }}/release/anki-sync-server
+          if-no-files-found: error
+          retention-days: 2
+
+  build-and-push-image:
+    name: "Build and push Docker image"
+    needs: [build-packages]
+
+    runs-on: ubuntu-24.04
+
+    permissions:
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        if: github.event_name != 'pull_request'
+        with:
+          registry: ghcr.io
+          username: z0rrn
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: github.event_name != 'pull_request' && github.ref_name == 'main'
+        with:
+          registry: docker.io
+          username: zorrn
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Downloads all artifacts
+        # Downloads to ${{ github.workspace }}/target/anki-sync-server-${{ matrix.docker_platform }}
+        # So executable at ${{ github.workspace }}/target/anki-sync-server-${{ matrix.docker_platform }}/anki-sync-server
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ github.workspace }}/target
+
+      - name: Docker get Metadata
+        id: metadata
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && 'ghcr.io/z0rrn/anki-sync-server' || 'ghcr.io/z0rrn/dev-anki-sync-server' }}
+            ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && 'docker.io/zorrn/anki-sync-server' || '' }}
+          flavor: |
+            latest=false
+            prefix=${{ github.event_name == 'pull_request' && format('pr-{0}-', github.event.number) || (github.ref_name != 'main' && format('branch-{0}-', github.ref_name) || '') }}
+          tags: |
+            # latest tag for default branch
+            type=raw,value=latest,enable={{is_default_branch}},priority=950
+            # anki version
+            type=raw,value=${{ env.anki_version }},priority=900
+            # git commit hash (12 characters)
+            type=sha
+            # pr tag/number
+            type=ref,event=pr
+          labels: |
+            org.opencontainers.image.title=Anki Sync Server
+            org.opencontainers.image.url=https://github.com/z0rrn/anki-sync-server-docker
+            org.opencontainers.image.description=Anki Sync Server is a third-party image that provides a server for syncing Anki decks.
+            org.opencontainers.image.source=https://github.com/z0rrn/anki-sync-server-docker
+            org.opencontainers.image.created={{commit_date 'YYYY-MM-DDTHH:mm:ss.SSS[Z]'}}
+            org.opencontainers.image.revision={{sha}}
+            org.opencontainers.image.version=${{ env.anki_version }}
+        env:
+          DOCKER_METADATA_SHORT_SHA_LENGTH: 12
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
