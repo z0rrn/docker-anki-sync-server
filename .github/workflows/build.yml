@@ -39,6 +39,7 @@ jobs:
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           target: x86_64-unknown-linux-gnu, aarch64-unknown-linux-gnu
+          components: cargo, clippy, rust-docs, rust-std, rustc, rustfmt
 
       - name: Clone git repository ankitects/anki
         uses: actions/checkout@v4
@@ -51,9 +52,12 @@ jobs:
         uses: Warpbuilds/action-debugger@v1.3
 
       #- name: Change directory to anki
-      #  run: cd ${{ github.workspace }}/anki
+      #  run: cd ${{ github.workspace }}/ankitects-anki/
 
-      #- name: Build anki
-      #  run: cargo build --release
+      #- name: Build anki-sync-server with release profile
+      #  run: |
+      #    PROTOC=$(which protoc) \
+      #    RUSTFLAGS='-C target-feature=+crt-static'\
+      #    cargo build --release --target x86_64-unknown-linux-gnu --package anki-sync-server
 
   #docker-and-push:
