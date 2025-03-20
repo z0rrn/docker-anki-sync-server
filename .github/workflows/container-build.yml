@@ -131,4 +131,4 @@ jobs:
       # Enable ssh debugging of manually-triggered workflows if the input option was provided or on failure
       - name: Setup interactive ssh session
         uses: Warpbuilds/action-debugger@v1.3
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }} || ${{ failure() }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
