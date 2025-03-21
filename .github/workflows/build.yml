@@ -56,6 +56,7 @@ jobs:
 
       - name: Generate fake artifacts
         run: |
+          mkdir -p ${{ github.workspace }}/ankitects-anki/target/${{ matrix.rust_target }}/release
           echo "Moin ${{ matrix.rust_target }}" > ${{ github.workspace }}/ankitects-anki/target/${{ matrix.rust_target }}/release/anki-sync-server
 
       #- name: Build anki-sync-server with release profile
