@@ -21,11 +21,15 @@ jobs:
   build:
     name: "Build packages"
 
-    runs-on: ubuntu-24.04-arm
-    #runs-on: ${{ matrix.os }}
-    #strategy:
-    #  matrix:
-    #    os: [ubuntu-24.04, ubuntu-24.04-arm]
+    #runs-on: ubuntu-24.04-arm
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            rust_target: x86_64-unknown-linux-gnu
+          - os: ubuntu-24.04-arm
+            rust_target: aarch64-unknown-linux-gnu
 
     permissions:
       packages: write
@@ -38,27 +42,34 @@ jobs:
       - name: Install Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          #target: x86_64-unknown-linux-gnu, aarch64-unknown-linux-gnu
-          target: aarch64-unknown-linux-gnu
-          components: cargo, clippy, rust-docs, rust-std, rustc, rustfmt
+          target: ${{ matrix.rust_target }}
 
-      - name: Clone git repository ankitects/anki
+      - name: Clone ankitects/anki repository
         uses: actions/checkout@v4
         with:
           repository: ankitects/anki
           path: ankitects-anki
           submodules: true
 
-      - name: Setup interactive ssh session
-        uses: Warpbuilds/action-debugger@v1.3
+      #- name: Setup interactive ssh session
+      #  uses: Warpbuilds/action-debugger@v1.3
 
-      #- name: Change directory to anki
-      #  run: cd ${{ github.workspace }}/ankitects-anki/
+      - name: Change directory to anki
+        run: cd ${{ github.workspace }}/ankitects-anki/
 
-      #- name: Build anki-sync-server with release profile
-      #  run: |
-      #    PROTOC=$(which protoc) \
-      #    RUSTFLAGS='-C target-feature=+crt-static' \
-      #    cargo build --release --target x86_64-unknown-linux-gnu --package anki-sync-server
+      - name: Build anki-sync-server with release profile
+        run: |
+          PROTOC=$(which protoc) \
+          RUSTFLAGS='-C target-feature=+crt-static' \
+          cargo build --release --target ${{ matrix.rust_target }} --package anki-sync-server
+
+      # Where binary is stored: ${{ github.workspace }}/ankitects-anki/target/${{ matrix.rust_target }}/release/anki-sync-server
+
+      - name: Upload binary to GitHub Packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: anki-sync-server-${{ matrix.rust_target }}
+          path: ${{ github.workspace }}/ankitects-anki/target/${{ matrix.rust_target }}/release/anki-sync-server
+          if-no-files-found: error
 
   #docker-and-push:
