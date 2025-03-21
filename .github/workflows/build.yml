@@ -54,11 +54,12 @@ jobs:
       #- name: Setup interactive ssh session
       #  uses: Warpbuilds/action-debugger@v1.3
 
-      - name: Change directory to anki
-        run: cd ${{ github.workspace }}/ankitects-anki/
+      #- name: Change directory to anki
+      #  run: cd ${{ github.workspace }}/ankitects-anki/
 
       - name: Build anki-sync-server with release profile
         run: |
+          cd ${{ github.workspace }}/ankitects-anki/
           PROTOC=$(which protoc) \
           RUSTFLAGS='-C target-feature=+crt-static' \
           cargo build --release --target ${{ matrix.rust_target }} --package anki-sync-server
