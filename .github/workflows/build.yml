@@ -89,21 +89,21 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      #- name: Login to GitHub Container Registry
-      #  uses: docker/login-action@v3
-      #  if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-      #  with:
-      #    registry: ghcr.io
-      #    username: z0rrn
-      #    password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        with:
+          registry: ghcr.io
+          username: z0rrn
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      #- name: Login to Docker Hub
-      #  uses: docker/login-action@v3
-      #  if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-      #  with:
-      #    registry: docker.io
-      #    username: zorrn
-      #    password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        with:
+          registry: docker.io
+          username: zorrn
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Downloads all artifacts
         # Downloads to ${{ github.workspace }}/target/anki-sync-server-${{ matrix.rust_target }}
@@ -114,3 +114,13 @@ jobs:
 
       - name: Setup interactive ssh session
         uses: Warpbuilds/action-debugger@v1.3
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: |
+            zorrn/test123:latest
+
+# Build command: docker buildx build -t zorrn/test123 --platform linux/amd64,linux/arm64 --push .
+# Works but user is missing in passwd
