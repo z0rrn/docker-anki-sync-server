@@ -81,17 +81,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download binary for x86_64-unknown-linux-gnu
-        uses: actions/download-artifact@v4
-        with:
-          name: anki-sync-server-x86_64-unknown-linux-gnu
-          path: ${{ github.workspace }}/target/x86_64-unknown-linux-gnu/anki-sync-server
+      #- name: Download binary for x86_64-unknown-linux-gnu
+      #  uses: actions/download-artifact@v4
+      #  with:
+      #    name: anki-sync-server-x86_64-unknown-linux-gnu
+      #    path: ${{ github.workspace }}/target/x86_64-unknown-linux-gnu
 
-      - name: Download binary for aarch64-unknown-linux-gnu
+      #- name: Download binary for aarch64-unknown-linux-gnu
+      #  uses: actions/download-artifact@v4
+      #  with:
+      #    name: anki-sync-server-aarch64-unknown-linux-gnu
+      #    path: ${{ github.workspace }}/target/aarch64-unknown-linux-gnu
+
+      - name: Downloads articats
         uses: actions/download-artifact@v4
         with:
-          name: anki-sync-server-aarch64-unknown-linux-gnu
-          path: ${{ github.workspace }}/target/aarch64-unknown-linux-gnu/anki-sync-server
+          path: ${{ github.workspace }}/target
 
       - name: Setup interactive ssh session
         uses: Warpbuilds/action-debugger@v1.3
