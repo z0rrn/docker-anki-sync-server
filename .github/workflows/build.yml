@@ -54,17 +54,16 @@ jobs:
       #- name: Setup interactive ssh session
       #  uses: Warpbuilds/action-debugger@v1.3
 
-      #- name: Change directory to anki
-      #  run: cd ${{ github.workspace }}/ankitects-anki/
-
-      - name: Build anki-sync-server with release profile
+      - name: Generate fake artifacts
         run: |
-          cd ${{ github.workspace }}/ankitects-anki/
-          PROTOC=$(which protoc) \
-          RUSTFLAGS='-C target-feature=+crt-static' \
-          cargo build --release --target ${{ matrix.rust_target }} --package anki-sync-server
+          echo "Moin ${{ matrix.rust_target }}" > ${{ github.workspace }}/ankitects-anki/target/${{ matrix.rust_target }}/release/anki-sync-server
 
-      # Where binary is stored: ${{ github.workspace }}/ankitects-anki/target/${{ matrix.rust_target }}/release/anki-sync-server
+      #- name: Build anki-sync-server with release profile
+      #  run: |
+      #    cd ${{ github.workspace }}/ankitects-anki/
+      #    PROTOC=$(which protoc) \
+      #    RUSTFLAGS='-C target-feature=+crt-static' \
+      #    cargo build --release --target ${{ matrix.rust_target }} --package anki-sync-server
 
       - name: Upload binary to GitHub Packages
         uses: actions/upload-artifact@v4
@@ -73,4 +72,24 @@ jobs:
           path: ${{ github.workspace }}/ankitects-anki/target/${{ matrix.rust_target }}/release/anki-sync-server
           if-no-files-found: error
 
-  #docker-and-push:
+  build-and-push-image:
+    name: "Build and push Docker image"
+
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download binary for x86_64-unknown-linux-gnu
+        uses: actions/download-artifact@v4
+        with:
+          name: anki-sync-server-x86_64-unknown-linux-gnu
+          path: ${{ github.workspace }}/target/x86_64-unknown-linux-gnu/anki-sync-server
+
+      - name: Download binary for aarch64-unknown-linux-gnu
+        uses: actions/download-artifact@v4
+        with:
+          name: anki-sync-server-aarch64-unknown-linux-gnu
+          path: ${{ github.workspace }}/target/aarch64-unknown-linux-gnu/anki-sync-server
+
+      - name: Setup interactive ssh session
+        uses: Warpbuilds/action-debugger@v1.3
