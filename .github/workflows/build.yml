@@ -28,10 +28,10 @@ jobs:
         include:
           - os: ubuntu-24.04
             rust_target: x86_64-unknown-linux-gnu
-            docker_platform: linux/amd64
+            docker_platform: linux-amd64
           - os: ubuntu-24.04-arm
             rust_target: aarch64-unknown-linux-gnu
-            docker_platform: linux/arm64
+            docker_platform: linux-arm64
 
     permissions:
       packages: write
