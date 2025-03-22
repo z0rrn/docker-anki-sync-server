@@ -3,7 +3,7 @@ FROM docker.io/library/alpine:3.21.3
 ARG TARGETOS
 ARG TARGETARCH
 
-COPY target/anki-sync-server-$TARGETOS-$TARGETARCH/anki-sync-server /usr/local/bin/anki-sync-server
+COPY --chmod=755 target/anki-sync-server-$TARGETOS-$TARGETARCH/anki-sync-server /usr/local/bin/anki-sync-server
 
 # switch user for better security
 RUN addgroup -S app && adduser -S -G app app
