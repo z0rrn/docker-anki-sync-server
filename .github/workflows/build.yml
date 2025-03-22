@@ -21,7 +21,6 @@ jobs:
   build-packages:
     name: "Build packages"
 
-    #runs-on: ubuntu-24.04-arm
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -56,17 +55,17 @@ jobs:
       #- name: Setup interactive ssh session
       #  uses: Warpbuilds/action-debugger@v1.3
 
-      - name: Generate fake artifacts
-        run: |
-          mkdir -p ${{ github.workspace }}/ankitects-anki/target/${{ matrix.rust_target }}/release
-          echo "Moin ${{ matrix.rust_target }}" > ${{ github.workspace }}/ankitects-anki/target/${{ matrix.rust_target }}/release/anki-sync-server
-
-      #- name: Build anki-sync-server with release profile
+      #- name: Generate fake artifacts
       #  run: |
-      #    cd ${{ github.workspace }}/ankitects-anki/
-      #    PROTOC=$(which protoc) \
-      #    RUSTFLAGS='-C target-feature=+crt-static' \
-      #    cargo build --release --target ${{ matrix.rust_target }} --package anki-sync-server
+      #    mkdir -p ${{ github.workspace }}/ankitects-anki/target/${{ matrix.rust_target }}/release
+      #    echo "Moin ${{ matrix.rust_target }}" > ${{ github.workspace }}/ankitects-anki/target/${{ matrix.rust_target }}/release/anki-sync-server
+
+      - name: Build anki-sync-server with release profile
+        run: |
+          cd ${{ github.workspace }}/ankitects-anki/
+          PROTOC=$(which protoc) \
+          RUSTFLAGS='-C target-feature=+crt-static' \
+          cargo build --release --target ${{ matrix.rust_target }} --package anki-sync-server
 
       - name: Upload binary to GitHub Packages
         uses: actions/upload-artifact@v4
@@ -74,12 +73,17 @@ jobs:
           name: anki-sync-server-${{ matrix.docker_platform }}
           path: ${{ github.workspace }}/ankitects-anki/target/${{ matrix.rust_target }}/release/anki-sync-server
           if-no-files-found: error
+          retention-days: 2
 
   build-and-push-image:
     name: "Build and push Docker image"
     needs: [build-packages]
 
     runs-on: ubuntu-24.04
+
+    permissions:
+      packages: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -91,7 +95,7 @@ jobs:
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        if: github.event_name != 'pull_request'
         with:
           registry: ghcr.io
           username: z0rrn
@@ -99,7 +103,7 @@ jobs:
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        if: github.event_name != 'pull_request'
         with:
           registry: docker.io
           username: zorrn
@@ -112,9 +116,6 @@ jobs:
         with:
           path: ${{ github.workspace }}/target
 
-      - name: Setup interactive ssh session
-        uses: Warpbuilds/action-debugger@v1.3
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
@@ -122,6 +123,9 @@ jobs:
           push: true
           tags: |
             zorrn/test123:latest
+
+      #- name: Setup interactive ssh session
+      #  uses: Warpbuilds/action-debugger@v1.3
 
 # Build command: docker buildx build -t zorrn/test123 --platform linux/amd64,linux/arm64 --push .
 # Works but user is missing in passwd
