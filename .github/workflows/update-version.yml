@@ -44,7 +44,7 @@ jobs:
       - name: Fetch GH API and get tag_name from latest release
         id: get-release
         run: |
-          # get latest release a. extract tag_name
+          # get latest release and extract tag_name
           tag_name=$(curl -L \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \

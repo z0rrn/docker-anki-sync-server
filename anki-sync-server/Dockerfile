@@ -8,7 +8,7 @@ ARG software_version
 ARG TARGETARCH
 ARG TARGETVARIANT
 
-# create empty directory (to be copied into scratch image) a. see script
+# create empty directory (to be copied into scratch image) and see script
 COPY ../tools/convert-arch-cargo.sh .
 RUN mkdir /empty && sh ./convert-arch-cargo.sh
 
